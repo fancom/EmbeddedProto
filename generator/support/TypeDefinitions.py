@@ -251,7 +251,7 @@ class MessageDefinition(TypeDefinition):
             node = node.parent
         return '.'.join(reversed(path))
 
-     def print_template_data(self, indent):
+    def print_template_data(self, indent):
         print(indent + "Message definition: " + self.name)
         if self.nested_msg_definitions:
             for msg in self.nested_msg_definitions:
