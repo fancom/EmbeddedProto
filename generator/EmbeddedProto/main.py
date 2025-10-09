@@ -188,11 +188,7 @@ def main_cli():
 
 # -----------------------------------------------------------------------------
 def main():
-    # Check if we are running as a plugin under protoc
-    if '--protoc-plugin' in sys.argv:
-        main_plugin()
-    else:
-        main_cli()
+    main_plugin()
 
 
 if __name__ == "__main__":
