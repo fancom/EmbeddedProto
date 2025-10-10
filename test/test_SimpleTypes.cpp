@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2022 Embedded AMS B.V. - All Rights Reserved
+ *  Copyright (C) 2020-2024 Embedded AMS B.V. - All Rights Reserved
  *
  *  This file is part of Embedded Proto.
  *
@@ -23,8 +23,8 @@
  *    info at EmbeddedProto dot com
  *
  *  Postal address:
- *    Johan Huizingalaan 763a
- *    1066 VH, Amsterdam
+ *    Atoomweg 2
+ *    1627 LE, Hoorn
  *    the Netherlands
  */
 
@@ -35,7 +35,8 @@
 #include <WriteBufferMock.h>
 
 #include <cstdint>    
-#include <limits> 
+#include <limits>
+#include <string.h>
 
 // EAMS message definitions
 #include <simple_types.h>
@@ -540,5 +541,64 @@ TEST(SimpleTypes, deserialize_fault_overlong_varint)
 
   EXPECT_EQ(::EmbeddedProto::Error::OVERLONG_VARINT, msg.deserialize(buffer));
 }
+
+#ifndef DISABLE_FIELD_NUMBER_TO_NAME 
+
+TEST(SimpleTypes, field_number_to_name)
+{
+  EXPECT_TRUE(0 == strcmp(::Test_Simple_Types::field_number_to_name(::Test_Simple_Types::FieldNumber::A_INT32),
+                          "a_int32"));
+
+  EXPECT_TRUE(0 == strcmp(::Test_Simple_Types::field_number_to_name(::Test_Simple_Types::FieldNumber::A_NESTED_ENUM),
+                          "a_nested_enum"));
+
+  EXPECT_TRUE(0 == strcmp(::Test_Simple_Types::field_number_to_name(static_cast<::Test_Simple_Types::FieldNumber>(0)),
+                          "Invalid FieldNumber"));
+
+  EXPECT_TRUE(0 == strcmp(::Test_Simple_Types::field_number_to_name(static_cast<::Test_Simple_Types::FieldNumber>(99)),
+                          "Invalid FieldNumber"));
+}
+
+#endif
+
+#ifdef MSG_TO_STRING
+
+TEST(SimpleTypes, to_string)
+{
+  constexpr uint32_t N = 1024;
+  char str[N];
+  ::EmbeddedProto::string_view str_view = { str, N };
+ 
+  ::Test_Simple_Types msg;
+
+  msg.set_a_int32(1);   
+  msg.set_a_int64(1);     
+  msg.set_a_uint32(1);    
+  msg.set_a_uint64(1);
+  msg.set_a_sint32(1);
+  msg.set_a_sint64(1);
+  msg.set_a_bool(true);
+  msg.set_a_enum(Test_Enum::ONE);
+  msg.set_a_fixed64(1);
+  msg.set_a_sfixed64(1);
+  msg.set_a_double(1.0);
+  msg.set_a_fixed32(1);
+  msg.set_a_sfixed32(1); 
+  msg.set_a_float(1.0F);
+  msg.set_a_nested_enum(::Test_Simple_Types::Nested_Enum::NE_B); 
+
+  ::EmbeddedProto::string_view str_left = msg.to_string(str_view);
+
+  // std::cout << std::endl << str << std::endl;
+  
+  constexpr uint32_t TXT_LEN = 278;
+  const char expected_str[TXT_LEN + 1] = "{\n  \"a_int32\": 1,\n  \"a_int64\": 1,\n  \"a_uint32\": 1,\n  \"a_uint64\": 1,\n  \"a_sint32\": 1,\n  \"a_sint64\": 1,\n  \"a_bool\": true,\n  \"a_enum\": 1,\n  \"a_fixed64\": 1,\n  \"a_sfixed64\": 1,\n  \"a_double\": 1.000000,\n  \"a_fixed32\": 1,\n  \"a_sfixed32\": 1,\n  \"a_float\": 1.000000,\n  \"a_nested_enum\": 1\n}";
+  ASSERT_STREQ(expected_str, str);
+  EXPECT_EQ(N - TXT_LEN, str_left.size);
+  EXPECT_EQ(str + TXT_LEN, str_left.data);  
+
+}
+
+#endif // MSG_TO_STRING
 
 } // End of namespace test_EmbeddedAMS_SimpleTypes

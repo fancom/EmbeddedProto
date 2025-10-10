@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2022 Embedded AMS B.V. - All Rights Reserved
+ *  Copyright (C) 2020-2024 Embedded AMS B.V. - All Rights Reserved
  *
  *  This file is part of Embedded Proto.
  *
@@ -23,8 +23,8 @@
  *    info at EmbeddedProto dot com
  *
  *  Postal address:
- *    Johan Huizingalaan 763a
- *    1066 VH, Amsterdam
+ *    Atoomweg 2
+ *    1627 LE, Hoorn
  *    the Netherlands
  */
 
@@ -120,6 +120,20 @@ namespace EmbeddedProto
       { 
         uint32_t limited_index = std::min(index, MAX_LENGTH-1);
         return data_[limited_index]; 
+      }
+
+      Error get_const(const uint32_t index, DATA_TYPE& value) const override
+      {
+        Error result = Error::NO_ERRORS;
+        if(index < current_length_)
+        {
+          value = data_[index];
+        }
+        else
+        {
+          result = Error::INDEX_OUT_OF_BOUND;
+        }
+        return result;
       }
 
       void set(uint32_t index, const DATA_TYPE& value) override 

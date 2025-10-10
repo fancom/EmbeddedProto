@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2022 Embedded AMS B.V. - All Rights Reserved
+ *  Copyright (C) 2020-2024 Embedded AMS B.V. - All Rights Reserved
  *
  *  This file is part of Embedded Proto.
  *
@@ -23,8 +23,8 @@
  *    info at EmbeddedProto dot com
  *
  *  Postal address:
- *    Johan Huizingalaan 763a
- *    1066 VH, Amsterdam
+ *    Atoomweg 2
+ *    1627 LE, Hoorn
  *    the Netherlands
  */
 
@@ -44,6 +44,7 @@ namespace EmbeddedProto
     ARRAY_FULL       = 4, //!< The array is full, it is not possible to push more items in it.
     INVALID_FIELD_ID = 5, //!< When the id obtained from the tag equeals zero.
     OVERLONG_VARINT  = 6, //!< The maximum number of bytes where read for this varint but we did not reach the end of the data.
+    INDEX_OUT_OF_BOUND = 7, //!< You are trying to access an index outside of valid data.
   };
 
 }; // End of namespace EmbeddedProto

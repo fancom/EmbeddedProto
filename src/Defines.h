@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2022 Embedded AMS B.V. - All Rights Reserved
+ *  Copyright (C) 2020-2024 Embedded AMS B.V. - All Rights Reserved
  *
  *  This file is part of Embedded Proto.
  *
@@ -23,8 +23,8 @@
  *    info at EmbeddedProto dot com
  *
  *  Postal address:
- *    Johan Huizingalaan 763a
- *    1066 VH, Amsterdam
+ *    Atoomweg 2
+ *    1627 LE, Hoorn
  *    the Netherlands
  */
 
@@ -32,6 +32,7 @@
 #define _EMBEDDED_PROTO_DEFINES_H_
 
 #include <type_traits>
+#include <cstdint>
 
 #if __cplusplus >= 201703L // C++17 and up
 #include <memory>
@@ -72,7 +73,15 @@ namespace EmbeddedProto
 #endif
 
 
+  //! An simple struct holding both a pointer to an array and the size of that array.
+  template<class T>
+  struct array_view {
+    T* data; //!< A pointer to the start of an array.
+    uint32_t size; //!< The number of elements in the array.
+  };
 
+  using string_view = array_view<char>;
+  using bytes_view = array_view<uint8_t>;
 
 }
 

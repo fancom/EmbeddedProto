@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2022 Embedded AMS B.V. - All Rights Reserved
+ *  Copyright (C) 2020-2024 Embedded AMS B.V. - All Rights Reserved
  *
  *  This file is part of Embedded Proto.
  *
@@ -23,8 +23,8 @@
  *    info at EmbeddedProto dot com
  *
  *  Postal address:
- *    Johan Huizingalaan 763a
- *    1066 VH, Amsterdam
+ *    Atoomweg 2
+ *    1627 LE, Hoorn
  *    the Netherlands
  */
 
@@ -116,6 +116,16 @@ TEST(RepeatedFieldFixedSize, get)
   x.get(3) = 3U;
   EXPECT_EQ(3U, x.get_const(2));
   EXPECT_EQ(3U, x.get_const(3));
+
+  // Test the get_const which will return out of bound errors.
+  ::EmbeddedProto::uint32 value = 0;
+  EXPECT_EQ(::EmbeddedProto::Error::NO_ERRORS, x.get_const(1, value));
+  EXPECT_EQ(1, value);
+
+  value = 99;
+  EXPECT_EQ(::EmbeddedProto::Error::INDEX_OUT_OF_BOUND, x.get_const(3, value));
+  // Value should not have changed.
+  EXPECT_EQ(99, value);
 }
 
 TEST(RepeatedFieldFixedSize, set_data_array) 
